@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: slearn
+Version: 0.0.1
+Summary: A project using pybind11 and CMake
+Home-page: UNKNOWN
+Author: Xiaoxi Sun
+Author-email: xiaoxisun2000@gmail.com
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN

@@ -1,0 +1,6 @@
+setup.py
+slearn.egg-info/PKG-INFO
+slearn.egg-info/SOURCES.txt
+slearn.egg-info/dependency_links.txt
+slearn.egg-info/not-zip-safe
+slearn.egg-info/top_level.txt
