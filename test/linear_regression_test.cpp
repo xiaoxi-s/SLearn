@@ -319,16 +319,16 @@ TEST_F(LinearRegressionTest, test_learning_rate_overshooting_solution) {
     // Cost should be very close to 0
     // learning rate is 100 (high)
     // Notice the iteration times. That is why the error is higher
-    double cost = lr_tune_all_true.GradientDescent(X, Y, 100, 100, true);
+    double cost = lr_tune_all_false.GradientDescent(X, Y, 100, 100, true);
     EXPECT_TRUE(cost < 0.5);
 
     // Expected values of two parameter after tuning
     // Parameters should be 1, 1, 0
     // In fact, it is enough to show that if the parameters are
     // 2 away from the actual parameters, overshooting is avoided
-    EXPECT_TRUE(abs(lr_tune_all_true.parameters_(0) - 1.) < 2);
-    EXPECT_TRUE(abs(lr_tune_all_true.parameters_(1) - 1.) < 2);
-    EXPECT_TRUE(abs(lr_tune_all_true.parameters_(2)) < 2);
+    EXPECT_TRUE(abs(lr_tune_all_false.parameters_(0) - 1.) < 2);
+    EXPECT_TRUE(abs(lr_tune_all_false.parameters_(1) - 1.) < 2);
+    EXPECT_TRUE(abs(lr_tune_all_false.parameters_(2)) < 2);
   } catch (std::exception e) {
     EXPECT_TRUE(false);
   }
