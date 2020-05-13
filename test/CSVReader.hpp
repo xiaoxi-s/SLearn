@@ -8,8 +8,8 @@ class CSVReader {
   CSVReader();
 
   Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
-  read_csv_as_matrix(std::string file_name, const char delimeter = ',');
+  read_csv_as_matrix(std::string &file_name, const char delimeter = ',');
 
-  std::vector<std::vector<std::string>> read_csv(std::string file_name,
-                                                  const char delimeter = ',');
+  std::vector<std::vector<std::string>> read_csv(std::string &file_name,
+                                                 const char delimeter = ',');
 };

@@ -1,0 +1,17 @@
+result of fitting intercept
+lr_model.coef_: [[ 2.82626704 -0.175216    0.00346678]]
+lr_model.intercept_: [-74.3640058]
+lr_model.score: 0.9968968822461699
+Mean_squared_error:
+4.784520145984926
+
+result of not fitting intercept
+lr_model.coef_: [[ 1.11910281 -1.67282088  0.06316338]]
+lr_model.intercept_: 0.0
+lr_model.score: 0.9911999012446834
+Mean_squared_error:
+8.057179377842516
+Normal equation optimization
+
+Process finished with exit code 0
+
