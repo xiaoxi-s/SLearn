@@ -111,7 +111,8 @@ TEST_F(LinearRegressionTest, test_normal_equation_not_tune_all_true) {
 TEST_F(LinearRegressionTest,
        test_gradient_descent_not_regularize_all_trival_case) {
   try {
-    Eigen::MatrixXd X(5, 1);
+    Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> X(5,
+                                                                             1);
     Eigen::VectorXd Y(5);
     X << 0, 1, 2, 3, 4;
     Y << 1, 2, 3, 4, 5;

@@ -1,1 +1,0 @@
-/usr/bin/c++  -O3 -DNDEBUG   CMakeFiles/OnlinelearningTests.dir/linear_regression_test.cpp.o CMakeFiles/OnlinelearningTests.dir/activation_test.cpp.o  -o OnlinelearningTests  -Wl,-rpath,/media/adrian/Envir/workspace/vscode/OnlineLearning/build/lib.linux-x86_64-3.8 ../lib/libgtest_main.a ../build/lib.linux-x86_64-3.8/libOnlinelearning.so ../lib/libgtest.a -lpthread 
