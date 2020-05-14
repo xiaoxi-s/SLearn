@@ -10,30 +10,32 @@ namespace activation {
 
   @param Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic>
     & mat - whose elements would be sigmoided. It is a variable reference
-  
+
   @returns the temp variable reference of the computed matrix
 */
 template <class Derived>
-Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic>& sigmoid(
-    Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic>& mat) {
-  Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic> temp(mat.rows(),
-                                                              mat.cols());
-  size_t sz = mat.rows() * mat.cols();  // number of data pieces
-  for (size_t i = 0; i < sz; i++) {
-    temp(i) = 1 / (exp(mat(i)) + 1);
-  }
-  return temp;
+Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>&
+sigmoid(Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>&
+            mat) {
+  return mat.exp();
 }
 
 /*
   The function takes a number as a parameter and return a sigmoid(number)
 
-  @param Derived & value - the value would be sigmoided. It is a variable reference
+  @param Derived & value - the value would be sigmoided. It is a variable
+  reference
   @returns the sigmoided value of the input
 */
 template <class Derived>
-Derived& sigmoid(Derived & value) {
-  return 1/(exp(value) + 1);
+Derived& sigmoid(Derived& value) {
+  return 1 / (exp(value) + 1);
 }
 
+template <class Derived>
+Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>& tanh(
+    Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>&
+        mat) {
+  return mat.tanh();
+}
 }  // namespace activation

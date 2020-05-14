@@ -29,8 +29,9 @@ class LinearRegression {
       Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic,
                                Eigen::RowMajor>>
           X,
-      Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, 1>> y,
-      double threshold, double learning_rate, double lambda);
+      Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, 1>> y, double threshold,
+      double learning_rate, bool check_learning_rate = false,
+      double lambda = 0);
 
  public:
   Eigen::Matrix<Derived, Eigen::Dynamic, 1> parameters_;
@@ -77,7 +78,9 @@ class LinearRegression {
               double lambda = 0);
 
   Eigen::Matrix<Derived, Eigen::Dynamic, 1> Predict(
-      const Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic> &X);
+      Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic,
+                               Eigen::RowMajor>>
+          X);
 
   void PrintParameters();
 };
@@ -239,10 +242,10 @@ Derived LinearRegression<Derived>::GradientDescent(
  * would always be number of features + 1 (a bias unit added).
  *
  * @param Derived - template parameter of the model
- * @param X - Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic,
- *  Eigen::RowMajor>>: feature matrix
- * @param y - Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, 1>>:
- *  label vector
+ * @param X - feature matrix: Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic,
+ *  Eigen::Dynamic, Eigen::RowMajor>>
+ * @param y - label vector: Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic,
+ *  1>>
  *
  * @return cost after tuning the parameters
  **/
@@ -275,10 +278,10 @@ Derived LinearRegression<Derived>::NormalEquation(
  * Compute cost of current parameter and given data set.
  *
  * @param Derived - template parameter of the model
- * @param X - Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic,
- *  Eigen::RowMajor>>: Training set matrix of m by n
- * @param y - Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, 1>>:
- *  label vector
+ * @param X - feature matrix of m by n: Eigen::Ref<Eigen::Matrix<Derived,
+ *  Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
+ * @param y - label vector:
+ *  Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, 1>>
  *
  * @return cost of prediction given the parameters. If the parameters are
  *invalid return -1
@@ -314,19 +317,29 @@ Derived LinearRegression<Derived>::ComputeCost(
   @param const Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic>
     & X_test - set of instances
 
-  @return Eigen::Matrix<Derived, Eigen::Dynamic, 1> - the predicted value
+  @return Eigen::Matrix<Derived, Eigen::Dynamic, 1> - the predicted label
     vector
 */
+/**
+ * Predict the output given a set of instances
+ *
+ * @param X - given feature matrix: Eigen::Ref<
+ *  Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
+ *
+ * @return the predicted label vector
+ **/
 template <class Derived>
 Eigen::Matrix<Derived, Eigen::Dynamic, 1> LinearRegression<Derived>::Predict(
-    const Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic> &X_test) {
+    Eigen::Ref<
+        Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
+        X) {
   // If there is no bias unit
-  size_t size = X_test.rows();
-  Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic> X_plus(
-      X_test.rows(), X_test.cols() + 1);
-  X_plus << Eigen::Matrix<Derived, Eigen::Dynamic, 1>::Ones(X_test.rows()),
-      X_test;
+  size_t size = X.rows();
+  Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
+      X_plus(X.rows(), X.cols() + 1);
+  X_plus << Eigen::Matrix<Derived, Eigen::Dynamic, 1>::Ones(X.rows()), X;
 
+  // predicting
   Eigen::Matrix<Derived, Eigen::Dynamic, 1> Y_hat = X_plus * parameters_;
 
   return Y_hat;
@@ -337,14 +350,14 @@ Eigen::Matrix<Derived, Eigen::Dynamic, 1> LinearRegression<Derived>::Predict(
  * based on the feature number and property of the feature matrix
  *
  * @param Derived - template parameter of the model
- * @param X - Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic,
- *  Eigen::RowMajor>>: feature matrix of m by n
- * @param y - Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, 1>>:
- *  label vector
- * @param threshold - double: difference between costs before and after tuning
- *  to stop fit
- * @param fit_intercept - bool: denotes whether to fit the intercept
- * @param lambda - double: regularization parameter
+ * @param X - feature matrix of m by n: Eigen::Ref<Eigen::Matrix<Derived,
+ *  Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
+ * @param y - label vector: Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic,
+ *  1>>
+ * @param threshold - difference between costs before and after tuning
+ *  to stop fit: double
+ * @param fit_intercept - denotes whether to fit the intercept: bool
+ * @param lambda - regularization parameter: double
  *
  * @return cost of prediction given the parameters.
  **/
@@ -363,7 +376,7 @@ Derived LinearRegression<Derived>::Fit(
     return -1;
   }
 
-  // supervised learning. ONLY one label per instance
+  // supervised learning. not multi-model ONLY one label per instance
   if (y.cols() != 1) {
     return -1;
   }
@@ -467,15 +480,18 @@ double LinearRegression<Derived>::CheckLearningRate(
 
 /**
  * Gradient descent based on difference between costs from two iterations.
+ * Use gradient descent to tune the parameter
  *
- * @param const Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic>
- *   & X - Training set matrix of m by n
- * @param const Eigen::Matrix<Derived, Eigen::Dynamic, 1>
- *   &Y - Training set lable of m by 1
- * @param Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic>
- *   & new_param - new parameter used temporarily in the linear regression model
- * @param double learning_rate - learning_rate of this model
- * @param double lambda        - regularization term; 0 means no regularization
+ * @param Derived - template parameter of the model
+ * @param X - Feature matrix:
+ *  Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic,
+ *             Eigen::RowMajor>>
+ * @param y - Label vector:
+ *  Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, 1>>
+ * @param threshold - threshold of stopping: double
+ * @param learning_rate - Learning rate for linear regression: double
+ * @param check_learning_rate - denotes whether to check learning rate to : bool
+ * @param lambda - double
  *
  * @return the cost after tuning. (If regularizatino is permitted,
  *   the cost would contain that. If the model is not usable, return -1)
@@ -486,7 +502,7 @@ Derived LinearRegression<Derived>::GradientDescentWithThreshhold(
         Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
         X,
     Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, 1>> y, double threshold,
-    double learning_rate, double lambda) {
+    double learning_rate, bool check_learning_rate, double lambda) {
   if (!usable_) return -1;
 
   // parameter mapping
@@ -494,8 +510,8 @@ Derived LinearRegression<Derived>::GradientDescentWithThreshhold(
              Eigen::InnerStride<1>>
       param(parameters_.data() + 1, parameters_.rows() - 1);
   // augmented feature matrix X_plus
-  Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> X_plus(y.rows(),
-                                                                X.cols() + 1);
+  Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
+      X_plus(y.rows(), X.cols() + 1);
   X_plus << Eigen::Matrix<Derived, Eigen::Dynamic, 1>::Ones(y.rows()), X;
   size_t batch_size = X.rows();
 
@@ -553,11 +569,14 @@ Derived LinearRegression<Derived>::GradientDescentWithThreshhold(
 /**
  * This function would compute cost with X_plus feature matrix
  *
- * @param
- * @param
- * @param
+ * @param X_plus - augmented feature matrix (one column inserted before the
+ *  first column): Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic,
+ *  Eigen::Dynamic, Eigen::RowMajor>>
+ * @param y - label vector: Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic,
+ *  1>>
+ * @param lambda - regularization parameter: double
  *
- * @return
+ * @return cost after computing. If the model is not usable, return -1.
  **/
 template <class Derived>
 Derived LinearRegression<Derived>::ComputeCostWithAugmentedFeature(
