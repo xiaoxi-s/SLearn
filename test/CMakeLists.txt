@@ -4,9 +4,9 @@ cmake_minimum_required(VERSION 3.8)
 set(This SLearnTests)
 
 set(Sources
-    linear_regression_test.cpp
+    test_linear_regression.cpp
     CSVReader.cpp
-    activation_test.cpp
+    test_activation.cpp
 )
 
 add_executable(${This} ${Sources})

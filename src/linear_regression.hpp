@@ -26,9 +26,11 @@ class LinearRegression {
       Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, 1>> y, double, double);
 
   Derived GradientDescentWithThreshhold(
-      const Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic> &X,
-      const Eigen::Matrix<Derived, Eigen::Dynamic, 1> &y, double threshold,
-      double learning_rate, double lambda);
+      Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic,
+                               Eigen::RowMajor>>
+          X,
+      Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, 1>> y,
+      double threshold, double learning_rate, double lambda);
 
  public:
   Eigen::Matrix<Derived, Eigen::Dynamic, 1> parameters_;
@@ -449,9 +451,12 @@ double LinearRegression<Derived>::CheckLearningRate(
     }
     cost_after_tuning = ComputeCost(X, y, lambda);
     if (cost_before_tuning > cost_after_tuning) {
+      // overshooting do not happen
       parameters_ = initial_param;
       return learning_rate;
     } else {
+      // overshooting happened
+      // decrease learning rate
       learning_rate = learning_rate / 10;
       cost_before_tuning = cost_after_tuning;
     }
@@ -477,33 +482,35 @@ double LinearRegression<Derived>::CheckLearningRate(
  **/
 template <class Derived>
 Derived LinearRegression<Derived>::GradientDescentWithThreshhold(
-    const Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic> &X,
-    const Eigen::Matrix<Derived, Eigen::Dynamic, 1> &Y, double threshold,
+    Eigen::Ref<
+        Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
+        X,
+    Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, 1>> y, double threshold,
     double learning_rate, double lambda) {
   if (!usable_) return -1;
 
-  // parameter mapping 
+  // parameter mapping
   Eigen::Map<Eigen::Matrix<Derived, Eigen::Dynamic, 1>, 0,
              Eigen::InnerStride<1>>
       param(parameters_.data() + 1, parameters_.rows() - 1);
   // augmented feature matrix X_plus
-  Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic> X_plus(Y.rows(),
+  Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> X_plus(y.rows(),
                                                                 X.cols() + 1);
-  X_plus << Eigen::Matrix<Derived, Eigen::Dynamic, 1>::Ones(Y.rows()), X;
+  X_plus << Eigen::Matrix<Derived, Eigen::Dynamic, 1>::Ones(y.rows()), X;
   size_t batch_size = X.rows();
 
   // must check learning rate first
-  learning_rate = CheckLearningRate(X, Y, learning_rate, lambda);
+  learning_rate = CheckLearningRate(X, y, learning_rate, lambda);
 
   // variables to determine thresholds
   Derived cost_before_tuning =
-      ComputeCostWithAugmentedFeature(X_plus, Y, lambda);
+      ComputeCostWithAugmentedFeature(X_plus, y, lambda);
   Derived cost_after_tuning = 0;
 
   // begin gradient descent
   while (abs(cost_before_tuning - cost_after_tuning) > threshold) {
     // record the cost before tuning
-    cost_before_tuning = ComputeCostWithAugmentedFeature(X_plus, Y, lambda);
+    cost_before_tuning = ComputeCostWithAugmentedFeature(X_plus, y, lambda);
 
     // each time train 100 times
     if (lambda == 0) {
@@ -511,12 +518,12 @@ Derived LinearRegression<Derived>::GradientDescentWithThreshhold(
         for (size_t i = 0; i < 100; i++) {
           parameters_ = parameters_ -
                         learning_rate / batch_size *
-                            (X_plus.transpose() * (X_plus * parameters_ - Y));
+                            (X_plus.transpose() * (X_plus * parameters_ - y));
         }
       } else {
         for (size_t i = 0; i < 100; i++) {
           param = param - learning_rate / batch_size *
-                              (X.transpose() * (X_plus * parameters_ - Y));
+                              (X.transpose() * (X_plus * parameters_ - y));
         }
       }
     } else if (fit_intercept_) {  // Regularize theta_0
@@ -524,7 +531,7 @@ Derived LinearRegression<Derived>::GradientDescentWithThreshhold(
       for (size_t i = 0; i < 100; i++) {
         parameters_ = parameters_ -
                       learning_rate / batch_size *
-                          (X_plus.transpose() * (X_plus * parameters_ - Y)) -
+                          (X_plus.transpose() * (X_plus * parameters_ - y)) -
                       lambda * parameters_;
       }
 
@@ -533,12 +540,12 @@ Derived LinearRegression<Derived>::GradientDescentWithThreshhold(
       for (size_t i = 0; i < 100; i++) {
         param = param -
                 learning_rate / batch_size *
-                    (X.transpose() * (X_plus * parameters_ - Y)) -
+                    (X.transpose() * (X_plus * parameters_ - y)) -
                 lambda * param;
       }
     }
 
-    cost_after_tuning = ComputeCostWithAugmentedFeature(X_plus, Y, lambda);
+    cost_after_tuning = ComputeCostWithAugmentedFeature(X_plus, y, lambda);
   }
   return cost_after_tuning;
 }
@@ -546,7 +553,7 @@ Derived LinearRegression<Derived>::GradientDescentWithThreshhold(
 /**
  * This function would compute cost with X_plus feature matrix
  *
- * @param 
+ * @param
  * @param
  * @param
  *

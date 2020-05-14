@@ -12,7 +12,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(PYBIND11_CPP_STANDARD -std=c++14)
 
-set(TEST FALSE)
+set(TEST TRUE)
 
 # eigen
 find_package( PkgConfig )
