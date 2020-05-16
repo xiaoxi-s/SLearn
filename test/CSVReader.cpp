@@ -1,7 +1,19 @@
 #include "CSVReader.hpp"
 #include<iostream>
+
+/**
+ * Constructor of CSVReader class. 
+ **/
 CSVReader::CSVReader() {}
 
+/**
+ * Read csv data as a Eigen Matrix of double type
+ * 
+ * @param file_name - the csv file name to be specified: std::string
+ * @param delimeter - the delimeter char to be specified: const char
+ * 
+ * @return Eigen Matrix of type double
+ **/
 Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
 CSVReader::read_csv_as_matrix(std::string &file_name, const char delimeter) {
   std::vector<std::vector<std::string>> lines_of_string =
@@ -30,6 +42,14 @@ CSVReader::read_csv_as_matrix(std::string &file_name, const char delimeter) {
   return mat_returned;
 }
 
+/**
+ * Read csv data as a std::vector of std::vector of std::string
+ * 
+ * @param file_name - the csv file name to be specified: std::string
+ * @param delimeter - the delimeter char to be specified: const char
+ * 
+ * @return std::vector of std::vector of std::string
+ **/
 std::vector<std::vector<std::string>> CSVReader::read_csv(
     std::string &file_name, const char delimeter) {
   std::ifstream fin(file_name, std::ifstream::in);  // open file

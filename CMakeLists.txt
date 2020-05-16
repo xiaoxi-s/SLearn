@@ -12,12 +12,13 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(PYBIND11_CPP_STANDARD -std=c++14)
 
-set(TEST TRUE)
+set(TEST FALSE)
 
 # eigen
 find_package( PkgConfig )
 pkg_check_modules( EIGEN3 REQUIRED eigen3 )
 include_directories( ${EIGEN3_INCLUDE_DIRS} )
+
 # pybind11
 find_package(pybind11 REQUIRED)
 # Python.h

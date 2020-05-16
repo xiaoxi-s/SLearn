@@ -3,6 +3,9 @@
 #include <string>
 #include <vector>
 
+/**
+ * This class simply acts as a csv file reader
+ **/
 class CSVReader {
  public:
   CSVReader();

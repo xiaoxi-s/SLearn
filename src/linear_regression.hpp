@@ -39,9 +39,9 @@ class LinearRegression {
 
   LinearRegression();
   LinearRegression(bool fit_intercept_);
-  void GaussianInit(const size_t, const Derived mu = 0,
-                    const Derived sigma = 1);
-  void ConstantInit(const size_t, const Derived);
+  void GaussianInit(const size_t, const double mu = 0,
+                    const double sigma = 1);
+  void ConstantInit(const size_t, const double);
 
   Derived NormalEquation(
       Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic,
@@ -77,7 +77,7 @@ class LinearRegression {
               double threshold = 0.1, bool fit_intercept = true,
               double lambda = 0);
 
-  Eigen::Matrix<Derived, Eigen::Dynamic, 1> Predict(
+  Eigen::Matrix<Derived, Eigen::Dynamic, 1, Eigen::RowMajor> Predict(
       Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic,
                                Eigen::RowMajor>>
           X);
@@ -85,42 +85,45 @@ class LinearRegression {
   void PrintParameters();
 };
 
-// Eigen::Matrix<Derived>
-/*
-  Constructor of the LinearRegression class: set fit_intercept_ to false.
-  Meaning: Do not fit theta_0
-*/
+/**
+ * Constructor of the LinearRegression class: set fit_intercept_ to false. 
+ * Meaning: Do not fit theta_0
+ *
+ * @param Derived - template parameter of the model
+ **/
 template <class Derived>
 LinearRegression<Derived>::LinearRegression() {
   this->usable_ = false;
   this->fit_intercept_ = false;
 }
 
-/*
-  Constructor of the LinearRegression class: set fit_intercept_ as the
-  parameter
-
-  @param bool fit_intercept_ - to be set
-*/
+/** 
+ * Constructor of the LinearRegression class: set fit_intercept_ 
+ * as the parameter
+ * 
+ * @param Derived - template parameter of the model
+ * @param fit_intercept_ - denotes whether to fit the intercept: bool
+ **/
 template <class Derived>
 LinearRegression<Derived>::LinearRegression(bool fit_intercept_) {
   this->fit_intercept_ = fit_intercept_;
   this->usable_ = false;
 }
 
-/*
-  Initialize the values of the parameters by Gaussian distribution (mu = 0,
-  sigmoid = 1)
-
-  @param const size_t sz - the number of the parameters: contain the bias
-    parameter
-  @param const Derived mu - the mean of Gaussian distribution
-  @param const Derived sigma - the standard deviation of Gaussian distribution
-*/
+/**
+ * Initialize the values of the parameters by Gaussian distribution 
+ * (mu = 0, sigmoid = 1)
+ * 
+ * @param Derived - template parameter of the model
+ * @param size - the number of the parameters. Notice: do not the bias parameter: 
+ *  const size_t
+ * @param mu - the mean of Gaussian distribution: double
+ * @param sigma - the standard deviation of Gaussian distribution: double
+ **/
 template <class Derived>
 void LinearRegression<Derived>::GaussianInit(const size_t size,
-                                             const Derived mu,
-                                             const Derived sigma) {
+                                             const double mu,
+                                             const double sigma) {
   size_t size_of_parameters = size + 1;
   const Eigen::Index idx = size_of_parameters;
   parameters_ = Eigen::Matrix<Derived, Eigen::Dynamic, 1>(idx);
@@ -137,16 +140,18 @@ void LinearRegression<Derived>::GaussianInit(const size_t size,
   this->usable_ = true;
 }
 
-/*
-  Initialize the values of the parameters with a constant value
-
-  @param const size_t sz - the number of the parameters: contain the bias
-    parameter
-  @param const Derived value - the constant value for initialization
-*/
+/**
+ * Initialize the values of the parameters by Gaussian distribution 
+ * (mu = 0, sigmoid = 1)
+ * 
+ * @param Derived - template parameter of the model
+ * @param size - the number of the parameters. Notice: do not the bias parameter: 
+ *  const size_t
+ * @param value - the value to be set as: double
+ **/
 template <class Derived>
 void LinearRegression<Derived>::ConstantInit(const size_t size,
-                                             const Derived value) {
+                                             const double value) {
   size_t size_of_parameters = size + 1;
   const Eigen::Index idx = size_of_parameters;
 
@@ -267,7 +272,11 @@ Derived LinearRegression<Derived>::NormalEquation(
     this->usable_ = true;
     return ComputeCost(X, y);
   } else {
-    parameters_ << 0, (X.transpose() * X).inverse() * X.transpose() * y;
+    // if the model is usable, the bias unit would be the previous bias unit
+    if (this->usable_)
+      parameters_ << parameters_(0), (X.transpose() * X).inverse() * X.transpose() * y;
+    else // otherwise, the bias unit would be 0
+      parameters_ << 0, (X.transpose() * X).inverse() * X.transpose() * y;
 
     this->usable_ = true;
     return ComputeCost(X, y);
@@ -284,7 +293,7 @@ Derived LinearRegression<Derived>::NormalEquation(
  *  Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, 1>>
  *
  * @return cost of prediction given the parameters. If the parameters are
- *invalid return -1
+ *  invalid return -1
  **/
 template <class Derived>
 Derived LinearRegression<Derived>::ComputeCost(
@@ -312,24 +321,16 @@ Derived LinearRegression<Derived>::ComputeCost(
   return c;
 }
 
-/*
-  Predict the output given a set of instances
-  @param const Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic>
-    & X_test - set of instances
-
-  @return Eigen::Matrix<Derived, Eigen::Dynamic, 1> - the predicted label
-    vector
-*/
 /**
  * Predict the output given a set of instances
  *
  * @param X - given feature matrix: Eigen::Ref<
  *  Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
  *
- * @return the predicted label vector
+ * @return the predicted label vector: 
  **/
 template <class Derived>
-Eigen::Matrix<Derived, Eigen::Dynamic, 1> LinearRegression<Derived>::Predict(
+Eigen::Matrix<Derived, Eigen::Dynamic, 1, Eigen::RowMajor> LinearRegression<Derived>::Predict(
     Eigen::Ref<
         Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
         X) {
@@ -340,7 +341,7 @@ Eigen::Matrix<Derived, Eigen::Dynamic, 1> LinearRegression<Derived>::Predict(
   X_plus << Eigen::Matrix<Derived, Eigen::Dynamic, 1>::Ones(X.rows()), X;
 
   // predicting
-  Eigen::Matrix<Derived, Eigen::Dynamic, 1> Y_hat = X_plus * parameters_;
+  Eigen::Matrix<Derived, Eigen::Dynamic, 1, Eigen::RowMajor> Y_hat = X_plus * parameters_;
 
   return Y_hat;
 }

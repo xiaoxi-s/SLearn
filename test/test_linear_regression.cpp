@@ -8,7 +8,6 @@
 
 #include <exception>
 #include <fstream>
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -50,7 +49,7 @@ TEST_F(LinearRegressionTest, test_normal_equation_tune_all_false) {
     // Fit the function y = 4/3*x
     X << 0, 1, 2, 3, 4;
     Y << 1, 2, 3, 4, 5;
-    std::cout << lr_tune_all_false.NormalEquation(X, Y) << std::endl;
+    lr_tune_all_false.NormalEquation(X, Y);
 
     // Expect size of the parameters: should be 2
     EXPECT_TRUE(lr_tune_all_false.parameters_.size() == 2);
@@ -265,7 +264,7 @@ TEST_F(LinearRegressionTest, test_normal_equation_not_tune_all_data_stored_in_cs
     EXPECT_TRUE(lr_tune_all_false.parameters_.size() == 4);
 
     double cost = lr_tune_all_false.NormalEquation(X, Y);
-    // values of the parameters: 0 1.21534711 -0.36012027 -0.01923811
+    // values of the parameters from sklearn: 0 1.21534711 -0.36012027 -0.01923811
     // tuned with sklearn. 
     // The result by this is:    0 1.19646696 -0.37240682 -0.02024269
     // which is consistent with gradient descent method
