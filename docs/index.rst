@@ -9,7 +9,8 @@ Welcome to SLearn's documentation!
 .. toctree::
    :maxdepth: 2
 
-   slearn
+.. automodule:: slearn.linear_regression
+
 
 
 Indices and tables

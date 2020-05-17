@@ -19,17 +19,20 @@ PYBIND11_MODULE(slearn, m) {
       .. autosummary::
         :toctree: _generate
 
-        LinearRegression.print_parameters
-        LinearRegression.gaussian_init
-        LinearRegression.normal_equation
-        LinearRegression.gradient_descent
-        LinearRegression.compute_cost
-        LinearRegression.compute_cost_with_aug_feature
-        LinearRegression.fit
+        linear_model
 
   )pbdoc";
+  py::module linear_model = m.def_submodule("linear_model", R"pbdoc(
+      Linear Model
+      -----------------------
 
-  py::class_<linearregression::LinearRegression<double>>(m, "LinearRegression")
+      .. currentmodule:: linear_model
+      .. autosummary::
+        :toctree: _generate
+
+        LinearRegression
+  )pbdoc");
+  py::class_<linearregression::LinearRegression<double>>(linear_model, "LinearRegression")
       .def(py::init<>(), R"pbdoc(
         Initialize a LinearRegression model with fit_intercept set to False
         

@@ -1,1 +1,2 @@
-.. automodule:: slearn
+.. automodule:: linear_model
+    .. autoclass:: LinearRegression
