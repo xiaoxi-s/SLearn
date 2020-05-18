@@ -12,27 +12,25 @@ namespace py = pybind11;
 // not sure parameters would be returned as a reference or as a copy
 PYBIND11_MODULE(slearn, m) {
   m.doc() = R"pbdoc(
-      SLearn
-      -----------------------
-
       .. currentmodule:: slearn
       .. autosummary::
         :toctree: _generate
 
-        linear_model
+        slearn
 
   )pbdoc";
   py::module linear_model = m.def_submodule("linear_model", R"pbdoc(
-      Linear Model
-      -----------------------
-
       .. currentmodule:: linear_model
       .. autosummary::
         :toctree: _generate
 
-        LinearRegression
   )pbdoc");
-  py::class_<linearregression::LinearRegression<double>>(linear_model, "LinearRegression")
+  py::class_<linearregression::LinearRegression<double>>(
+      linear_model, "LinearRegression", R"pbdoc(
+      .. currentmodule:: LinearRegression
+      .. autosummary::
+        :toctree: _generate
+  )pbdoc")
       .def(py::init<>(), R"pbdoc(
         Initialize a LinearRegression model with fit_intercept set to False
         
@@ -49,6 +47,7 @@ PYBIND11_MODULE(slearn, m) {
            &linearregression::LinearRegression<double>::PrintParameters,
            R"pbdoc(
         Print the parameters in the linear regression model
+
         )pbdoc")  // print parameters
       .def("gaussian_init",
            &linearregression::LinearRegression<double>::GaussianInit,

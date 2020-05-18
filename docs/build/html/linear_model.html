@@ -1,0 +1,175 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Linear Model &#8212; SLearn 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="SLearn" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-slearn.linear_model">
+<span id="linear-model"></span><h1>Linear Model<a class="headerlink" href="#module-slearn.linear_model" title="Permalink to this headline">¶</a></h1>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+</tbody>
+</table>
+<dl class="py class">
+<dt id="slearn.linear_model.LinearRegression">
+<em class="property">class </em><code class="sig-prename descclassname">slearn.linear_model.</code><code class="sig-name descname">LinearRegression</code><a class="headerlink" href="#slearn.linear_model.LinearRegression" title="Permalink to this definition">¶</a></dt>
+<dd><table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+</tbody>
+</table>
+<dl class="py method">
+<dt id="slearn.linear_model.LinearRegression.compute_cost">
+<code class="sig-name descname">compute_cost</code><span class="sig-paren">(</span><em class="sig-param">self: slearn.linear_model.LinearRegression, X: numpy.ndarray[float64[m, n], flags.writeable, flags.c_contiguous], y: numpy.ndarray[float64[m, 1], flags.writeable], lambda: float = 0</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#slearn.linear_model.LinearRegression.compute_cost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute cost given X, y and lambda (regularization parameter).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="slearn.linear_model.LinearRegression.compute_cost_with_aug_feature">
+<code class="sig-name descname">compute_cost_with_aug_feature</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#slearn.linear_model.LinearRegression" title="slearn.linear_model.LinearRegression">slearn.linear_model.LinearRegression</a></span></em>, <em class="sig-param"><span class="n">X_plus</span><span class="p">:</span> <span class="n">numpy.ndarray<span class="p">[</span>float64<span class="p">[</span>m<span class="p">, </span>n<span class="p">]</span><span class="p">, </span>flags.writeable<span class="p">, </span>flags.c_contiguous<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">y</span><span class="p">:</span> <span class="n">numpy.ndarray[float64[m, 1], flags.writeable]</span></em>, <em class="sig-param"><span class="n">lamda</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0</span></em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#slearn.linear_model.LinearRegression.compute_cost_with_aug_feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute cost given X_plus, y and lambda (regularization parameter).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="slearn.linear_model.LinearRegression.constant_init">
+<code class="sig-name descname">constant_init</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#slearn.linear_model.LinearRegression" title="slearn.linear_model.LinearRegression">slearn.linear_model.LinearRegression</a></span></em>, <em class="sig-param"><span class="n">size</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">value</span><span class="p">:</span> <span class="n">float</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#slearn.linear_model.LinearRegression.constant_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init parameters with size, and the same value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="slearn.linear_model.LinearRegression.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">self: slearn.linear_model.LinearRegression, X: numpy.ndarray[float64[m, n], flags.writeable, flags.c_contiguous], y: numpy.ndarray[float64[m, 1], flags.writeable], threshold: float = 0.1, fit_intercept: bool = True, lambda: float = 0</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#slearn.linear_model.LinearRegression.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the linear model based on X, y, cost difference threshold and lambda (regularization parameter).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="slearn.linear_model.LinearRegression.gaussian_init">
+<code class="sig-name descname">gaussian_init</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#slearn.linear_model.LinearRegression" title="slearn.linear_model.LinearRegression">slearn.linear_model.LinearRegression</a></span></em>, <em class="sig-param"><span class="n">size</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">mu</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">0</span></em>, <em class="sig-param"><span class="n">sigma</span><span class="p">:</span> <span class="n">float</span> <span class="o">=</span> <span class="default_value">1</span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#slearn.linear_model.LinearRegression.gaussian_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init parameters with size, and gaussian distribution</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="slearn.linear_model.LinearRegression.gradient_descent">
+<code class="sig-name descname">gradient_descent</code><span class="sig-paren">(</span><em class="sig-param">self: slearn.linear_model.LinearRegression, X: numpy.ndarray[float64[m, n], flags.writeable, flags.c_contiguous], y: numpy.ndarray[float64[m, 1], flags.writeable], iterations: int, learning_rate: float, check_learning_rate: bool = False, lambda: float = 0</em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#slearn.linear_model.LinearRegression.gradient_descent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use gradient descent to tune the parameters given X, y and learning_rate.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="slearn.linear_model.LinearRegression.normal_equation">
+<code class="sig-name descname">normal_equation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#slearn.linear_model.LinearRegression" title="slearn.linear_model.LinearRegression">slearn.linear_model.LinearRegression</a></span></em>, <em class="sig-param"><span class="n">X</span><span class="p">:</span> <span class="n">numpy.ndarray<span class="p">[</span>float64<span class="p">[</span>m<span class="p">, </span>n<span class="p">]</span><span class="p">, </span>flags.writeable<span class="p">, </span>flags.c_contiguous<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">y</span><span class="p">:</span> <span class="n">numpy.ndarray[float64[m, 1], flags.writeable]</span></em><span class="sig-paren">)</span> &#x2192; float<a class="headerlink" href="#slearn.linear_model.LinearRegression.normal_equation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use normal equation to tune the parameters given X and y.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="slearn.linear_model.LinearRegression.print_parameters">
+<code class="sig-name descname">print_parameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#slearn.linear_model.LinearRegression" title="slearn.linear_model.LinearRegression">slearn.linear_model.LinearRegression</a></span></em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#slearn.linear_model.LinearRegression.print_parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the parameters in the linear regression model</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">SLearn</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Linear Model</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">SLearn</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Xiaoxi Sun.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/linear_model.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
