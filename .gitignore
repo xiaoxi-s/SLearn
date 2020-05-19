@@ -1,0 +1,25 @@
+# include directories
+/include/
+/googletest/
+
+# unkonwn directories
+/CMakeFiles
+/bind_test
+/build
+/test/build
+/lib
+/pybind11
+/dist
+/slearn.egg-info
+
+# archive and ???
+.a
+.so
+
+
+# single file
+CMake*.cmake
+CMakeCache.txt
+CTestTestfile.cmake
+Makefile
+cmake_install.cmake
