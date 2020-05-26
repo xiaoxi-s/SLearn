@@ -77,7 +77,7 @@ class LinearRegression {
               double threshold = 0.1, bool fit_intercept = true,
               double lambda = 0);
 
-  Eigen::Matrix<Derived, Eigen::Dynamic, 1, Eigen::RowMajor> Predict(
+  Eigen::Matrix<Derived, Eigen::Dynamic, 1> Predict(
       Eigen::Ref<Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic,
                                Eigen::RowMajor>>
           X);
@@ -308,11 +308,6 @@ Derived LinearRegression<Derived>::ComputeCost(
       X_plus(y.rows(), X.cols() + 1);
   X_plus << Eigen::Matrix<Derived, Eigen::Dynamic, 1>::Ones(y.rows()), X;
 
-  Eigen::Map<Eigen::Matrix<Derived, Eigen::Dynamic, 1>, 1,
-             Eigen::InnerStride<1>>
-      param(parameters_.data() + 1, parameters_.rows() - 1,
-            Eigen::InnerStride<1>());
-
   size_t batch_size = X.rows();
 
   Derived c = 0.5 / batch_size * (X_plus * parameters_ - y).transpose() *
@@ -330,20 +325,15 @@ Derived LinearRegression<Derived>::ComputeCost(
  * @return the predicted label vector: 
  **/
 template <class Derived>
-Eigen::Matrix<Derived, Eigen::Dynamic, 1, Eigen::RowMajor> LinearRegression<Derived>::Predict(
+Eigen::Matrix<Derived, Eigen::Dynamic, 1> LinearRegression<Derived>::Predict(
     Eigen::Ref<
         Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>
         X) {
-  // If there is no bias unit
-  size_t size = X.rows();
-  Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
+  Eigen::Matrix<Derived, Eigen::Dynamic, Eigen::Dynamic>
       X_plus(X.rows(), X.cols() + 1);
   X_plus << Eigen::Matrix<Derived, Eigen::Dynamic, 1>::Ones(X.rows()), X;
 
-  // predicting
-  Eigen::Matrix<Derived, Eigen::Dynamic, 1, Eigen::RowMajor> Y_hat = X_plus * parameters_;
-
-  return Y_hat;
+  return X_plus * parameters_;
 }
 
 /**
@@ -383,10 +373,10 @@ Derived LinearRegression<Derived>::Fit(
   }
 
   // choose between normal equation and gradient descent
-  if (X.rows() > X.cols() && X.rows() <= 100000) {
+  if (X.rows() > X.cols() && X.rows() <= 10000) {
     return NormalEquation(X, y);
   } else {
-    return GradientDescentWithThreshhold(X, y, 100, 0.1, lambda);
+    return GradientDescentWithThreshhold(X, y, threshould, 10, true,lambda);
   }
 }
 

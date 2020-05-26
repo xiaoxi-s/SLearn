@@ -355,3 +355,14 @@ TEST_F(LinearRegressionTest, test_fit) {
     EXPECT_TRUE(false);
   }
 }
+
+
+TEST_F(LinearRegressionTest, test_predict) {
+  try {
+    
+  } catch (std::exception e) {
+    // unexpected exception
+    EXPECT_TRUE(false);
+  }
+
+}

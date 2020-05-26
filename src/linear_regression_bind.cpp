@@ -87,5 +87,9 @@ PYBIND11_MODULE(slearn, m) {
            py::arg("fit_intercept") = true, py::arg("lambda") = 0,
            py::return_value_policy::reference_internal, R"pbdoc(
         Fit the linear model based on X, y, cost difference threshold and lambda (regularization parameter).
-        )pbdoc");  // fit method
+        )pbdoc")  // fit method
+      .def("predict", &linearregression::LinearRegression<double>::Predict, 
+          py::arg("X"), py::return_value_policy::reference_internal, R"pbdoc(
+        Given X, predict the label y. 
+        )pbdoc"); 
 }
