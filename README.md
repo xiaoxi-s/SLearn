@@ -6,6 +6,7 @@
 
 - Environment: Ubuntu >= 19.0.4
 - Python >= 3.6
+- GCC >= 4.8
 - Libraries: `pybind11` for Python and `eigen3` for C++.
 
 For how to install `pybind11`, see this [link](https://zoomadmin.com/HowToInstall/UbuntuPackage/python-pybind11)
